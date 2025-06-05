@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import csv
 import requests_html
 import time
+import json
 
 # setup instructions:
 # pip install requests_html
@@ -39,9 +40,20 @@ def generate_csv(url, file_name):
 		# print(soup.prettify())
 
 		items = soup.find_all(type="application/ld+json")[2]
-		print(items.prettify())
+		# print(items.prettify())
 
-		
+		items_json = json.loads(items.string)  # convert string to dict
+		# description = items_json.get('description', '')
+		# print(description)
+		# print(items_json)
+		item_name = items_json.get('name', '') # gets the name of the item
+		print(f"Item: {item_name}")
 
+		item_offers = items_json.get('offers','')
+		# print(item_offers)
+		print(len(item_offers))
+
+		for item_option in item_offers:
+			print(item_option)
 
 generate_csv(potash_url,csv_name)
